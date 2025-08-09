@@ -1,0 +1,142 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
+@import 'react-toastify/dist/ReactToastify.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-warm-gray-200;
+  }
+  
+  body {
+    @apply font-sans antialiased;
+    @apply bg-white text-warm-gray-900;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-semibold;
+  }
+}
+
+@layer components {
+  .gradient-gold {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+  
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Toast Customization */
+.Toastify__toast-container {
+  @apply font-sans;
+}
+
+.Toastify__toast {
+  @apply rounded-xl shadow-soft;
+  @apply bg-white border border-warm-gray-100;
+}
+
+.Toastify__toast--success {
+  @apply border-green-200;
+}
+
+.Toastify__toast--error {
+  @apply border-red-200;
+}
+
+.Toastify__toast--warning {
+  @apply border-orange-200;
+}
+
+.Toastify__toast--info {
+  @apply border-blue-200;
+}
+
+.Toastify__progress-bar {
+  @apply bg-gradient-to-r from-primary-400 to-accent-500;
+}
+
+.Toastify__close-button {
+  @apply text-warm-gray-400 hover:text-warm-gray-600;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-warm-gray-50;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-400;
+}
+
+/* Mobile Navigation Adjustments */
+@media (max-width: 768px) {
+  .mobile-safe-area {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* Focus States */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white;
+}
+
+/* Content Type Badges */
+.badge-ebook {
+  @apply bg-green-100 text-green-800 border-green-200;
+}
+
+.badge-video {
+  @apply bg-blue-100 text-blue-800 border-blue-200;
+}
+
+.badge-audio {
+  @apply bg-purple-100 text-purple-800 border-purple-200;
+}
+
+.badge-course {
+  @apply bg-orange-100 text-orange-800 border-orange-200;
+}
+
+/* Hover Animations */
+@keyframes lift {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-4px) scale(1.02); }
+}
+
+.hover-lift {
+  transition: all 0.2s ease-out;
+}
+
+.hover-lift:hover {
+  animation: lift 0.2s ease-out forwards;
+  @apply shadow-golden;
+}

@@ -62,5 +62,22 @@ export const contentService = {
     }
     const deleted = contentData.splice(index, 1)[0];
     return { ...deleted };
+  },
+
+  // Check if content supports offline download
+  async getOfflineCapabilities(id) {
+    await delay(100);
+    const content = contentData.find(item => item.Id === id);
+    if (!content) {
+      throw new Error("Content not found");
+    }
+    
+    return {
+      canDownload: true,
+      estimatedSize: Math.floor(Math.random() * 50) + 10, // 10-60 MB
+      format: content.type === 'ebook' ? 'PDF/EPUB' : 
+              content.type === 'video' ? 'MP4' :
+              content.type === 'audio' ? 'MP3' : 'Mixed'
+    };
   }
 };

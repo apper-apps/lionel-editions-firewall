@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "@/components/organisms/Header";
 import BottomNavigation from "@/components/organisms/BottomNavigation";
+import DownloadManager from "@/components/organisms/DownloadManager";
 
 const Layout = () => {
   return (
@@ -16,6 +17,9 @@ const Layout = () => {
       
       {/* Bottom Navigation */}
       <BottomNavigation />
+      
+      {/* Download Manager */}
+      <DownloadManager />
     </div>
   );
 };

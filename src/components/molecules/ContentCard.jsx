@@ -5,16 +5,32 @@ import Card from "@/components/atoms/Card";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
 import ApperIcon from "@/components/ApperIcon";
+import ProgressBar from "@/components/molecules/ProgressBar";
 import { useCart } from "@/hooks/useCart";
-
+import { useDownloads } from "@/hooks/useDownloads";
 const ContentCard = ({ content }) => {
   const navigate = useNavigate();
   const { addToCart, isInCart } = useCart();
+  const { startDownload, cancelDownload, getContentStatus, isOffline, isDownloading } = useDownloads();
+
+  const downloadStatus = getContentStatus(content.Id);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
     addToCart(content);
     toast.success(`${content.title} ajouté au panier !`);
+  };
+
+  const handleDownload = async (e) => {
+    e.stopPropagation();
+    
+    if (isDownloading(content.Id)) {
+      cancelDownload(content.Id);
+      toast.info(`Téléchargement de "${content.title}" annulé`);
+    } else {
+      await startDownload(content);
+      toast.success(`Téléchargement de "${content.title}" commencé !`);
+    }
   };
 
   const handleCardClick = () => {
@@ -75,29 +91,81 @@ const ContentCard = ({ content }) => {
           </p>
         </div>
 
+{/* Download Progress */}
+        {downloadStatus.status === 'downloading' && (
+          <div className="mb-4">
+            <ProgressBar
+              progress={downloadStatus.progress || 0}
+              size="sm"
+              animated={true}
+              showPercentage={true}
+            />
+            <p className="text-xs text-warm-gray-500 mt-1">
+              Téléchargement en cours... ({downloadStatus.progress || 0}%)
+            </p>
+          </div>
+        )}
+
         <div className="flex items-center justify-between mt-auto">
           <div className="text-xl font-bold gradient-text">
             {formatPrice(content.price)}
           </div>
           
-          <Button
-            size="sm"
-            onClick={handleAddToCart}
-            disabled={isInCart(content.Id)}
-            className={isInCart(content.Id) ? "opacity-50" : ""}
-          >
-            {isInCart(content.Id) ? (
-              <>
-                <ApperIcon name="Check" className="w-4 h-4 mr-2" />
-                Ajouté
-              </>
-            ) : (
-              <>
-                <ApperIcon name="ShoppingCart" className="w-4 h-4 mr-2" />
-                Ajouter
-              </>
+          <div className="flex items-center space-x-2">
+            {/* Offline Status Indicator */}
+            {isOffline(content.Id) && (
+              <div className="flex items-center text-green-600">
+                <ApperIcon name="CheckCircle" className="w-4 h-4 mr-1" />
+                <span className="text-xs font-medium">Hors ligne</span>
+              </div>
             )}
-          </Button>
+
+            {/* Download Button */}
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={handleDownload}
+              disabled={downloadStatus.status === 'completed'}
+              className="min-w-[100px]"
+            >
+              {isOffline(content.Id) ? (
+                <>
+                  <ApperIcon name="CheckCircle" className="w-4 h-4 mr-2" />
+                  Téléchargé
+                </>
+              ) : isDownloading(content.Id) ? (
+                <>
+                  <ApperIcon name="X" className="w-4 h-4 mr-2" />
+                  Annuler
+                </>
+              ) : (
+                <>
+                  <ApperIcon name="Download" className="w-4 h-4 mr-2" />
+                  Télécharger
+                </>
+              )}
+            </Button>
+
+            {/* Add to Cart Button */}
+            <Button
+              size="sm"
+              onClick={handleAddToCart}
+              disabled={isInCart(content.Id)}
+              className={isInCart(content.Id) ? "opacity-50" : ""}
+            >
+              {isInCart(content.Id) ? (
+                <>
+                  <ApperIcon name="Check" className="w-4 h-4 mr-2" />
+                  Ajouté
+                </>
+              ) : (
+                <>
+                  <ApperIcon name="ShoppingCart" className="w-4 h-4 mr-2" />
+                  Ajouter
+                </>
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </Card>

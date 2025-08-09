@@ -9,7 +9,7 @@ import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import { contentService } from "@/services/api/contentService";
 import { useCart } from "@/hooks/useCart";
-
+import { useWishlist } from "@/hooks/useWishlist";
 const ContentDetailPage = () => {
   const { contentId } = useParams();
   const navigate = useNavigate();
@@ -17,8 +17,8 @@ const ContentDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [relatedContent, setRelatedContent] = useState([]);
-  const { addToCart, isInCart } = useCart();
-
+const { addToCart, isInCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
   useEffect(() => {
     loadContent();
   }, [contentId]);
@@ -52,11 +52,13 @@ const ContentDetailPage = () => {
     addToCart(content);
     navigate("/cart");
   };
+const handleWishlist = () => {
+    toggleWishlist(content);
+  };
 
   const handleRetry = () => {
     loadContent();
   };
-
   const typeIcons = {
     ebook: "BookOpen",
     video: "Play",
@@ -197,7 +199,7 @@ const ContentDetailPage = () => {
                   <p className="text-warm-gray-600">Prix unique, accès à vie</p>
                 </div>
 
-                <div className="space-y-3 mb-6">
+<div className="space-y-3 mb-6">
                   <Button
                     size="lg"
                     onClick={handleBuyNow}
@@ -208,17 +210,32 @@ const ContentDetailPage = () => {
                     {isInCart(content.Id) ? "Déjà dans le panier" : "Acheter maintenant"}
                   </Button>
                   
-                  {!isInCart(content.Id) && (
+                  <div className="flex space-x-3">
+                    {!isInCart(content.Id) && (
+                      <Button
+                        variant="secondary"
+                        size="lg"
+                        onClick={handleAddToCart}
+                        className="flex-1"
+                      >
+                        <ApperIcon name="Plus" className="w-5 h-5 mr-2" />
+                        Ajouter au panier
+                      </Button>
+                    )}
+                    
                     <Button
-                      variant="secondary"
+                      variant={isInWishlist(content.Id) ? "default" : "secondary"}
                       size="lg"
-                      onClick={handleAddToCart}
-                      className="w-full"
+                      onClick={handleWishlist}
+                      className={`${isInCart(content.Id) ? 'w-full' : 'flex-1'} ${isInWishlist(content.Id) ? 'text-red-600 bg-red-50 hover:bg-red-100 border-red-200' : ''}`}
                     >
-                      <ApperIcon name="Plus" className="w-5 h-5 mr-2" />
-                      Ajouter au panier
+                      <ApperIcon 
+                        name="Heart" 
+                        className={`w-5 h-5 mr-2 ${isInWishlist(content.Id) ? 'fill-current' : ''}`} 
+                      />
+                      {isInWishlist(content.Id) ? "Dans les favoris" : "Ajouter aux favoris"}
                     </Button>
-                  )}
+                  </div>
                 </div>
 
                 <div className="flex items-center justify-center text-sm text-warm-gray-500">

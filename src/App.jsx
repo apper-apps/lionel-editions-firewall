@@ -8,6 +8,7 @@ import ContentDetailPage from "@/components/pages/ContentDetailPage";
 import CartPage from "@/components/pages/CartPage";
 import DashboardPage from "@/components/pages/DashboardPage";
 import SearchPage from "@/components/pages/SearchPage";
+import WishlistPage from "@/components/pages/WishlistPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="cart" element={<CartPage />} />
             <Route path="dashboard" element={<DashboardPage />} />
             <Route path="search" element={<SearchPage />} />
+            <Route path="wishlist" element={<WishlistPage />} />
           </Route>
         </Routes>
         <ToastContainer

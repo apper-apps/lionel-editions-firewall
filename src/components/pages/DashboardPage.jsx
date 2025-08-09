@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { contentService } from "@/services/api/contentService";
+import { useWishlist } from "@/hooks/useWishlist";
+import ApperIcon from "@/components/ApperIcon";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
-import ApperIcon from "@/components/ApperIcon";
-import Loading from "@/components/ui/Loading";
-import Empty from "@/components/ui/Empty";
-import { contentService } from "@/services/api/contentService";
-
 const DashboardPage = () => {
   const navigate = useNavigate();
+const { wishlistCount } = useWishlist();
   const [purchasedContent, setPurchasedContent] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
   const [stats, setStats] = useState({
@@ -24,7 +25,7 @@ const DashboardPage = () => {
     loadDashboardData();
   }, []);
 
-  const loadDashboardData = async () => {
+const loadDashboardData = async () => {
     try {
       setLoading(true);
       // Simulate purchased content (first 6 items)
@@ -32,7 +33,7 @@ const DashboardPage = () => {
       const purchased = allContent.slice(0, 6);
       setPurchasedContent(purchased);
 
-      // Simulate recent activity
+      // Simulate recent activity including wishlist
       const activities = [
         {
           id: 1,
@@ -44,6 +45,14 @@ const DashboardPage = () => {
         },
         {
           id: 2,
+          type: "wishlist",
+          title: "Ajouté aux favoris",
+          description: "3 nouveaux contenus dans vos favoris",
+          time: "Il y a 4 heures",
+          icon: "Heart"
+        },
+        {
+          id: 3,
           type: "completion",
           title: "Contenu terminé",
           description: purchased[1]?.title || "Formation complétée",
@@ -51,7 +60,7 @@ const DashboardPage = () => {
           icon: "CheckCircle"
         },
         {
-          id: 3,
+          id: 4,
           type: "milestone",
           title: "Objectif atteint",
           description: "5 heures d'apprentissage cette semaine",
@@ -271,7 +280,7 @@ const DashboardPage = () => {
               </div>
 
               {/* Quick Actions */}
-              <Card variant="golden" className="p-6 mt-8">
+<Card variant="golden" className="p-6 mt-8">
                 <h3 className="font-display text-lg font-semibold text-warm-gray-900 mb-4">
                   Actions Rapides
                 </h3>
@@ -285,6 +294,21 @@ const DashboardPage = () => {
                   >
                     <ApperIcon name="Search" className="w-4 h-4 mr-2" />
                     Rechercher du contenu
+                  </Button>
+                  
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="w-full justify-start relative"
+                    onClick={() => navigate("/wishlist")}
+                  >
+                    <ApperIcon name="Heart" className="w-4 h-4 mr-2" />
+                    Mes Favoris
+                    {wishlistCount > 0 && (
+                      <span className="absolute right-3 bg-red-100 text-red-800 text-xs font-medium px-2 py-0.5 rounded-full">
+                        {wishlistCount}
+                      </span>
+                    )}
                   </Button>
                   
                   <Button 
@@ -310,7 +334,7 @@ const DashboardPage = () => {
               </Card>
             </div>
           </div>
-        </div>
+</div>
       </div>
     </div>
   );

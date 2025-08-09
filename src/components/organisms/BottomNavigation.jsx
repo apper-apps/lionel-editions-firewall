@@ -7,7 +7,7 @@ const BottomNavigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const navigationItems = [
+const navigationItems = [
     {
       id: "boutique",
       label: "Boutique",
@@ -21,15 +21,15 @@ const BottomNavigation = () => {
       path: "/section/academie"
     },
     {
-      id: "coach",
-      label: "Coach",
-      icon: "Users",
-      path: "/section/coach"
+      id: "wishlist",
+      label: "Favoris",
+      icon: "Heart",
+      path: "/wishlist"
     },
     {
       id: "bienetre",
       label: "Bien-Être",
-      icon: "Heart",
+      icon: "Leaf",
       path: "/section/bienetre"
     },
     {
